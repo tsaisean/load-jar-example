@@ -1,6 +1,7 @@
 
-*.jar
+
 .gradle/
 .idea/
 build/
 .DS_Store
+gradle-wrapper.jar
