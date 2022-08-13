@@ -9,8 +9,6 @@ public class Main {
     public static void main(String[] args)  {
         Main t = new Main();
 
-        System.out.println("Working Directory = " + System.getProperty("user.dir"));
-
         try {
             t.doSomething();
             t.doSomething2();
@@ -19,37 +17,31 @@ public class Main {
         }
     }
 
-        public void doSomething() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, MalformedURLException {
-            URL myJar = new File("jar/LibraryA-1.0-SNAPSHOT.jar").toURI().toURL();
-            URL myJar3 = new File("jar/v1/LibraryB-1.0-SNAPSHOT.jar").toURI().toURL();
-            URLClassLoader child = new URLClassLoader(
-                    new URL[] {myJar, myJar3},
-                    this.getClass().getClassLoader()
-            );
-            Class<?> classToLoad = child.loadClass("com.sean.liba.Main");
-            child.loadClass("com.sean.lib.Calculator");
-            //Class<?> classToLoad = Class.forName("com.sean.liba.Main", true, child);
-            //Class<?> classToLoad2 = Class.forName("com.sean.lib.Calculator", true, child);
-            Method[] a = classToLoad.getDeclaredMethods();
-            Method method = classToLoad.getDeclaredMethod("print");
-            Object instance = classToLoad.newInstance();
-            method.invoke(instance);
-            method.invoke(instance);
-        }
+    public void doSomething() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, MalformedURLException {
+        System.out.println("========== Classloader 1 ===========");
+        URL myJar = new File("Application/jar/LibraryA-1.0-SNAPSHOT.jar").toURI().toURL();
+        URL myJar2 = new File("Application/jar/v1/LibraryB-1.0-SNAPSHOT.jar").toURI().toURL();
+        URLClassLoader child = new URLClassLoader(
+                new URL[] {myJar, myJar2},
+                this.getClass().getClassLoader()
+        );
+        Class<?> classToLoad = Class.forName("com.sean.liba.Main", true, child);
+        Method method = classToLoad.getDeclaredMethod("print");
+        Object instance = classToLoad.newInstance();
+        method.invoke(instance);
+        method.invoke(instance);
+    }
 
     public void doSomething2() throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException, MalformedURLException {
-        URL myJar = new File("jar/LibraryA-1.0-SNAPSHOT.jar").toURI().toURL();
-        URL myJar3 = new File("jar/v2/LibraryB-2.0-SNAPSHOT.jar").toURI().toURL();
+        System.out.println("========== Classloader 2 ===========");
+        URL myJar = new File("Application/jar/LibraryA-2.0-SNAPSHOT.jar").toURI().toURL();
+        URL myJar2 = new File("Application/jar/v1/LibraryB-1.0-SNAPSHOT.jar").toURI().toURL();
         URLClassLoader child = new URLClassLoader(
-                new URL[] {myJar, myJar3},
+                new URL[] {myJar, myJar2},
                 this.getClass().getClassLoader()
         );
         Class<?> classToLoad = child.loadClass("com.sean.liba.Main");
-        child.loadClass("com.sean.lib.Calculator");
-        //Class<?> classToLoad = Class.forName("com.sean.liba.Main", true, child);
-        //Class<?> classToLoad2 = Class.forName("com.sean.lib.Calculator", true, child);
-        Method[] a = classToLoad.getDeclaredMethods();
-        Method method = classToLoad.getDeclaredMethod("print");
+        Method method = classToLoad.getDeclaredMethod("print2");
         Object instance = classToLoad.newInstance();
         method.invoke(instance);
     }
